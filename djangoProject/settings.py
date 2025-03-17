@@ -25,7 +25,9 @@ SECRET_KEY = "django-insecure-#_ezga)9=^+eka#81m0$b!p*1iiv^10!k3wbn-4#-=*h&a-#+h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "finance-management-5ctk.onrender.com",  # 你的 Render 生成的域名
+]
 
 
 # Application definition
