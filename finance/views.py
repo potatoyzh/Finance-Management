@@ -44,11 +44,11 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
 
         if user:
-            print(f"✅ Login successful for user: {user}")  # 打印登录成功信息
+            print(f"Login successful for user: {user}")  # 打印登录成功信息
             login(request, user)
             return redirect('dashboard')  # 跳转到主页
         else:
-            print("❌ Login failed! Invalid username or password.")  # 打印失败信息
+            print("Login failed! Invalid username or password.")  # 打印失败信息
             return render(request, 'finance/login.html', {'error': 'Invalid username or password'})
 
     return render(request, 'finance/login.html')
@@ -269,13 +269,13 @@ def admin_login_view(request):
             request.session['is_admin'] = True  # 在 session 里存储管理员身份
             request.session['admin_id'] = admin.id  # 存储 Admin ID
 
-            print("✅ Admin 登录成功，重定向到 admin_user_list")  # 调试信息
+            print("Admin 登录成功，重定向到 admin_user_list")  # 调试信息
             return redirect('admin_user_list')  # 确保 URL 名称正确
         else:
-            print("❌ 登录失败: 用户名或密码错误")  # 调试信息
+            print("登录失败: 用户名或密码错误")  # 调试信息
             return render(request, 'finance/admin_login.html', {'error': '管理员用户名或密码错误'})
 
-    print("🔹 GET 请求 - 显示 Admin 登录页面")  # 调试信息
+    print("GET 请求 - 显示 Admin 登录页面")  # 调试信息
     return render(request, 'finance/admin_login.html')
 
 
