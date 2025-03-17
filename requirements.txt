@@ -11,7 +11,6 @@ isoduration==20.11.0
 jhwutils @ https://github.com/johnhw/jhwutils/zipball/master#sha256=89301c2da3049e9055a0fb2d4331e83e4527d7a4461aa40dbc78ca5431b01acd
 jsonpointer==2.1
 jupyterlab_widgets==3.0.13
-mkl-service==2.4.0
 numpy==1.26.4
 pickle-mixin==1.0.2
 protobuf==3.20.3
