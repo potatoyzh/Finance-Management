@@ -1,0 +1,152 @@
+{% extends "finance/base.html" %}
+
+
+{% block title %}Transaction - Personal Finance{% endblock %}
+
+{% block content %}
+<style>
+    .transaction-container {
+        max-width: 900px;
+        margin: 50px auto;
+        padding: 20px;
+        background: #f5f5f5;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .section {
+        padding: 20px;
+        background: #fff;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+    .btn {
+        padding: 10px 15px;
+        background: #333;
+        color: #fff;
+        border-radius: 5px;
+        transition: 0.2s;
+        cursor: pointer;
+        border: none;
+    }
+    .btn:hover {
+        transform: scale(1.05);
+        background: #555;
+    }
+    .btn-danger {
+        background: red;
+    }
+    .btn-danger:hover {
+        background: darkred;
+    }
+    input, select {
+        padding: 10px;
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    th, td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+    tr:hover {
+        background: rgba(0, 0, 0, 0.05);
+    }
+    .error-message {
+        color: red;
+        font-weight: bold;
+        display: none;
+    }
+</style>
+
+<div class="transaction-container">
+    <h2>Transaction Records</h2>
+
+    <!-- 添加交易 -->
+    <div class="section">
+        <h3>Add Transaction</h3>
+        <form id="transaction-form" method="POST" action="{% url 'transaction_create' %}">
+            {% csrf_token %}
+            
+            <label>Category:</label>
+            <select name="category" required>
+                <option value="">-- Select Category --</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.category_name }}</option>
+                {% empty %}
+                    <option value="" disabled>No categories available</option>
+                {% endfor %}
+            </select>
+        
+            <label>Currency:</label>
+            <select name="currency" required>
+                <option value="">-- Select Currency --</option>
+                {% for currency in currencies %}
+                    <option value="{{ currency.id }}">{{ currency.currency_name }}</option>
+                {% empty %}
+                    <option value="" disabled>No currencies available</option>
+                {% endfor %}
+            </select>
+
+            <label>Amount:</label>
+            <input type="number" name="amount" step="0.01" required>
+            <p class="error-message">Amount must be greater than zero.</p>
+
+            <label>Type:</label>
+            <select name="transaction_type" required>
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+            </select>
+
+            <button type="submit" class="btn">Add</button>
+        </form>
+    </div>
+
+    <!-- 交易列表 -->
+    <div class="section">
+        <h3>Your Transactions</h3>
+      <table>
+        <thead>
+            <tr>
+                <th><a href="?sort={{ sort_direction }}transaction_date">Date ⬍</a></th>
+                <th>Category</th>
+                <th>Currency</th>  
+                <th><a href="?sort={{ sort_direction }}amount">Amount ⬍</a></th>
+                <th>Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.transaction_date|date:"Y-m-d" }}</td>
+                <td>{{ transaction.category }}</td>
+                <td>{{ transaction.currency.currency_name }}</td> 
+                <td class="{% if transaction.transaction_type == 'income' %}income{% else %}expense{% endif %}">
+                    {{ transaction.amount }}
+                </td>
+                <td>{{ transaction.transaction_type|title }}</td>
+                <td>
+                    <a href="{% url 'transaction_edit' transaction.id %}" class="btn">Edit</a>
+                    <form method="POST" action="{% url 'transaction_delete' transaction.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6">No transactions found</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+</div>
+
+
+{% endblock %}

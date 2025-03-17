@@ -1,0 +1,118 @@
+{% extends "finance/base.html" %}
+
+{% block title %}Statistics - Personal Finance{% endblock %}
+
+{% block content %}
+<style>
+    .charts-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center; /* 水平居中 */
+        gap: 20px; /* 图表间距 */
+    }
+
+    .chart-container {
+        width: 50%; /* 控制每个图表宽度 */
+        max-width: 450px;
+        text-align: center;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    canvas {
+        width: 100% !important;
+        height: auto !important;
+    }
+</style>
+
+<h2 style="text-align: center;">Financial Statistics</h2>
+
+<div class="charts-wrapper">
+    <div class="chart-container">
+        <h3>Income Distribution</h3>
+        <canvas id="incomePieChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <h3>Expense Distribution</h3>
+        <canvas id="expensePieChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <h3>Monthly Income</h3>
+        <canvas id="monthlyIncomeChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <h3>Monthly Expenses</h3>
+        <canvas id="monthlyExpenseChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let incomeLabels = JSON.parse('{{ income_labels|escapejs }}');
+        let incomeValues = JSON.parse('{{ income_values|escapejs }}');
+        let expenseLabels = JSON.parse('{{ expense_labels|escapejs }}');
+        let expenseValues = JSON.parse('{{ expense_values|escapejs }}');
+        let months = JSON.parse('{{ months|escapejs }}');
+        let incomeChartValues = JSON.parse('{{ income_chart_values|escapejs }}');
+        let expenseChartValues = JSON.parse('{{ expense_chart_values|escapejs }}');
+
+        // **收入饼状图**
+        new Chart(document.getElementById("incomePieChart"), {
+            type: 'pie',
+            data: {
+                labels: incomeLabels,
+                datasets: [{
+                    data: incomeValues,
+                    backgroundColor: ["#4CAF50", "#FFC107", "#2196F3", "#E91E63", "#9C27B0"],
+                }]
+            }
+        });
+
+        // **支出饼状图**
+        new Chart(document.getElementById("expensePieChart"), {
+            type: 'pie',
+            data: {
+                labels: expenseLabels,
+                datasets: [{
+                    data: expenseValues,
+                    backgroundColor: ["#F44336", "#FF9800", "#3F51B5", "#009688", "#795548"],
+                }]
+            }
+        });
+
+        // **每月收入折线图**
+        new Chart(document.getElementById("monthlyIncomeChart"), {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Income',
+                    data: incomeChartValues,
+                    borderColor: "#4CAF50",
+                    fill: false
+                }]
+            }
+        });
+
+        // **每月支出折线图**
+        new Chart(document.getElementById("monthlyExpenseChart"), {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Expense',
+                    data: expenseChartValues,
+                    borderColor: "#F44336",
+                    fill: false
+                }]
+            }
+        });
+    });
+</script>
+{% endblock %}

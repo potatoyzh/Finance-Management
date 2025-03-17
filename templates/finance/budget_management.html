@@ -1,0 +1,121 @@
+{% extends "finance/base.html" %}
+
+{% block title %}Budget Management - Personal Finance{% endblock %}
+
+{% block content %}
+<style>
+    .budget-container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background: #f5f5f5;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .section {
+        padding: 20px;
+        background: #fff;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+    .btn {
+        padding: 10px 15px;
+        background: #333;
+        color: #fff;
+        border-radius: 5px;
+        transition: 0.2s;
+        cursor: pointer;
+        border: none;
+    }
+    .btn:hover {
+        transform: scale(1.05);
+        background: #555;
+    }
+    .btn-danger {
+        background: red;
+    }
+    .btn-danger:hover {
+        background: darkred;
+    }
+    input, select {
+        padding: 10px;
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    th, td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+    tr:hover {
+        background: rgba(0, 0, 0, 0.05);
+    }
+    .error-message {
+        color: red;
+        font-weight: bold;
+        display: none;
+    }
+</style>
+
+<div class="budget-container">
+    <h2>Budget Management</h2>
+
+    <!-- 预算列表 -->
+    <div class="section">
+        <h3>Current Budgets</h3>
+       <table>
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Currency</th>  
+                <th>Budget</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Exceeded</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for budget in budgets %}
+            <tr>
+                <td>{{ budget.category.category_name }}</td>
+                <td>{{ budget.currency.currency_name }}</td>  
+                <td>{{ budget.amount_limit }}</td>
+                <td>{{ budget.start_date }}</td>
+                <td>{{ budget.end_date }}</td>
+                <td>
+                    {% if budget.is_exceeded %}
+                        <span style="color: red;">Yes</span>
+                    {% else %}
+                        <span style="color: green;">No</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'budget_edit' budget.id %}" class="btn">Edit</a>
+                    <form method="POST" action="{% url 'budget_delete' budget.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7">No budgets found</td></tr>  
+            {% endfor %}
+        </tbody>
+       </table>
+    </div>
+
+    <!-- 操作按钮 -->
+    <div class="section">
+        <a href="{% url 'budget_create' %}" class="btn">Add New Budget</a>
+        <a href="{% url 'dashboard' %}" class="btn">Back to Dashboard</a>
+    </div>
+</div>
+
+{% endblock %}

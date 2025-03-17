@@ -1,0 +1,94 @@
+{% extends "finance/base_admin.html" %}
+
+{% block title %}Admin Budget Management{% endblock %}
+
+{% block content %}
+<style>
+    .budget-container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background: #f5f5f5;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    th, td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: center;
+    }
+    th {
+        background: #333;
+        color: white;
+    }
+    .btn {
+        padding: 8px 15px;
+        background: #333;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .btn:hover {
+        background: #555;
+    }
+    .btn-danger {
+        background: red;
+    }
+    .btn-danger:hover {
+        background: darkred;
+    }
+</style>
+
+<div class="budget-container">
+    <h2>Budget Management</h2>
+
+    <!-- Budget List -->
+    <table>
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Category</th>
+                <th>Amount Limit</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Exceeded</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for budget in budgets %}
+            <tr>
+                <td>{{ budget.user.username }}</td>
+                <td>{{ budget.category.category_name }}</td>
+                <td>£{{ budget.amount_limit }}</td>
+                <td>{{ budget.start_date }}</td>
+                <td>{{ budget.end_date }}</td>
+                <td>{% if budget.is_exceeded %}Yes{% else %}No{% endif %}</td>
+                <td>
+                    <form action="{% url 'admin_budget_delete' budget.id %}" method="POST" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">No budgets available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "finance/base_admin.html" %}
+
+{% block title %}User Management - Admin Panel{% endblock %}
+
+{% block content %}
+<style>
+    .user-container {
+        max-width: 900px;
+        margin: 50px auto;
+        padding: 20px;
+        background: #f5f5f5;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .section {
+        padding: 20px;
+        background: #fff;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+    .btn {
+        padding: 10px 15px;
+        background: #333;
+        color: #fff;
+        border-radius: 5px;
+        transition: 0.2s;
+        cursor: pointer;
+        border: none;
+    }
+    .btn:hover {
+        transform: scale(1.05);
+        background: #555;
+    }
+    .btn-danger {
+        background: red;
+    }
+    .btn-danger:hover {
+        background: darkred;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    th, td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+    tr:hover {
+        background: rgba(0, 0, 0, 0.05);
+    }
+</style>
+
+<div class="user-container">
+    <h2>Manage Users</h2>
+
+    <div class="section">
+        <h3>User List</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Account Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.account_type }}</td>
+                    <td>
+                        <form method="POST" action="{% url 'admin_user_delete' user.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4">No users found</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
