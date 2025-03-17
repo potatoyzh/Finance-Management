@@ -36,19 +36,23 @@ def register_view(request):
 # 登录
 def login_view(request):
     if request.method == 'POST':
-
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        user = authenticate(request, username=username, password=password)
-        if user:
+        print(f"🔹 Attempting login - Username: {username}, Password: {password}")  # 打印收到的用户名和密码
 
+        user = authenticate(request, username=username, password=password)
+
+        if user:
+            print(f"✅ Login successful for user: {user}")  # 打印登录成功信息
             login(request, user)
             return redirect('dashboard')  # 跳转到主页
         else:
+            print("❌ Login failed! Invalid username or password.")  # 打印失败信息
             return render(request, 'finance/login.html', {'error': 'Invalid username or password'})
 
     return render(request, 'finance/login.html')
+
 
 # 用户登出
 def logout_view(request):
