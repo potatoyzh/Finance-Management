@@ -28,8 +28,9 @@
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-            {% if request.path in '/login/' or '/register/' %}
+            {% if request.path in '/login/' or request.path in '/register/' %}
             <span class="navbar-brand text-white fs-4 fw-bold">Personal Finance</span>
+            {% else %}
             <a class="navbar-brand" href="/dashboard/">Personal Finance</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
