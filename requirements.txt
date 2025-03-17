@@ -30,3 +30,5 @@ webcolors==24.8.0
 wget==3.2
 wheel==0.45.0
 widgetsnbextension==4.0.13
+whitenoise
+
