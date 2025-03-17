@@ -255,18 +255,38 @@ def budget_delete_view(request, budget_id):
 # --------------------------------------------------------- admin  ---------------------------------------------------#
 # --------------------------------------------------------------------------------------------------------------------#
 
-# admin login
 from django.shortcuts import render, redirect
-from finance.models import Admin  # 确保导入你的 Admin 模型
+from finance.models import Admin  # 确保导入 Admin 模型
+import logging
+
+# 设置日志
+logger = logging.getLogger(__name__)
 
 def admin_login_view(request):
+    """
+    管理员登录视图
+    """
+    # **🔹 获取数据库中的所有管理员并打印**
+    admins = Admin.objects.all()
+    print("当前数据库中的管理员用户：")
+    for admin in admins:
+        print(f"🔹 ID: {admin.id}, Username: {admin.username}, Email: {admin.email}, Password: {admin.password}")
+
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
 
+        print(f"🔹 Received POST request - Username: {username}, Password: {password}")  # 打印请求数据
+
         admin = Admin.objects.filter(username=username).first()
-        if admin and admin.password == password:  # 这里应该使用加密验证
-            request.session['is_admin'] = True  # 在 session 里存储管理员身份
+
+        if admin:
+            print(f"账号存在 - ID: {admin.id}, Username: {admin.username}, Email: {admin.email}")
+        else:
+            print("未找到该管理员账户")
+
+        if admin and admin.password == password:  # 这里应该使用哈希加密验证
+            request.session['is_admin'] = True  # 存储管理员身份
             request.session['admin_id'] = admin.id  # 存储 Admin ID
 
             print("Admin 登录成功，重定向到 admin_user_list")  # 调试信息
@@ -277,6 +297,7 @@ def admin_login_view(request):
 
     print("GET 请求 - 显示 Admin 登录页面")  # 调试信息
     return render(request, 'finance/admin_login.html')
+
 
 
 # admin user list
